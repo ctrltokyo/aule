@@ -1,6 +1,7 @@
 from prometheus_client import start_http_server, Counter, Gauge, Summary, Histogram, Info
 from peewee import *
 from time import sleep
+import modules.test_metric
 
 db = SqliteDatabase('prometheus_metrics.db')
 global_sleep_value = 5
@@ -35,9 +36,9 @@ db.create_tables([Service, Metric])
 # Fake Metrics
 ###
 
-if Service.select() == '':
+if not Service.get(name='default'):
     Service.create(name='default')
-if Metric.select() == '':
+if not Metric.get(belongs_to='default', name='test_metric'):
     Metric.create(
         belongs_to='default',
         name='test_metric',
@@ -73,7 +74,7 @@ for metric in Metric.select():
 
 def loopy():
     print(metric_tracker)
-    metric_tracker['test_metric'].inc(4.7)
+    metric_tracker['test_metric'].set(modules.test_metric.update_metric())
     return True
 
 
