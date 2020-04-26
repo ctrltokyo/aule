@@ -11,6 +11,7 @@ A simple prometheus metrics gateway backed by SQLite.
 
 Missing:    
 * Does not support labels at this point.
+* Does not support enum types.
 * Documentation.
 
 © Alexander Nicholson (ctrlTokyo & DragonStuff)    

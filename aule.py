@@ -47,14 +47,19 @@ metric_tracker = []
 for metric in Metric.select():
     if metric.type == 'Counter':
         print("Counter: " + metric.name)
+        metric_tracker.append(Counter(metric.name, metric.description))
     if metric.type == 'Gauge':
         print("Gauge: " + metric.name)
+        metric_tracker.append(Gauge(metric.name, metric.description))
     if metric.type == 'Summary':
         print("Summary: " + metric.name)
-        Summary(metric.name, metric.description)
+        metric_tracker.append(Summary(metric.name, metric.description))
     if metric.type == 'Histogram':
         print("Histogram: " + metric.name)
-
+        metric_tracker.append(Histogram(metric.name, metric.description))
+    if metric.type == 'Info':
+        print("Info: " + metric.name)
+        metric_tracker.append(Info(metric.name, metric.description))
 
 if __name__ == '__main__':
     # Start up the server to expose metrics.
