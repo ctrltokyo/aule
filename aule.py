@@ -2,6 +2,7 @@ from prometheus_client import start_http_server, Counter, Gauge, Summary, Histog
 from peewee import *
 from time import sleep
 from modules import test_metric
+from plugins import url_plugin
 
 db = SqliteDatabase('prometheus_metrics.db')
 global_sleep_value = 5
@@ -26,7 +27,6 @@ class Metric(BaseModel):
     name = CharField(unique=True)
     type = CharField(choices=['Counter', 'Gauge', 'Summary', 'Histogram', 'Info', 'Enum'])
     description = TextField()
-    source_type = CharField(choices=['remote_sql_query', 'url', 'module', 'null'])
 
 
 db.connect()
@@ -72,10 +72,20 @@ for metric in Metric.select():
         metric_tracker[metric.name] = Info(metric.name, metric.description)
 
 
+###
+# Runtime
+###
+
+
+def url_update(update, url):
+    metric_tracker[update].set(url_plugin.update_metric(url))
+
+
 def loopy():
     print(metric_tracker)
     for update in metric_tracker:
-        metric_tracker[update].set(test_metric.update_metric())
+        #metric_tracker[update].set(test_metric.update_metric())
+        url_update(update, "https://www.random.org/integers/?num=1&min=1&max=99&col=1&base=10&format=plain&rnd=new")
     return True
 
 
