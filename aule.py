@@ -1,7 +1,7 @@
 from prometheus_client import start_http_server, Counter, Gauge, Summary, Histogram, Info
 from peewee import *
 from time import sleep
-from aulemodules import test_metric
+from modules import test_metric
 
 db = SqliteDatabase('prometheus_metrics.db')
 global_sleep_value = 5
